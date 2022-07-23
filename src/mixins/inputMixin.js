@@ -32,6 +32,10 @@ export default {
       default: true,
       type: Boolean
     },
+    rounded: {
+      default: false,
+      type: Boolean
+    },
     multiple: {
       default: false,
       type: Boolean
@@ -76,6 +80,18 @@ export default {
       default: 'white',
       type: String
     },
+    icon: {
+      default: '',
+      type: String
+    },
+    class: {
+      default: '',
+      type: String
+    },
+    options: {
+      default: () => [],
+      type: Array
+    },
     hidden: {
       default: false,
       type: Boolean
@@ -83,6 +99,18 @@ export default {
     src: {
       default: '',
       type: [String, Number, Boolean, Array, Boolean]
+    },
+    ripple: {
+      default: false,
+      type: [Boolean, Object]
+    },
+    outline: {
+      default: false,
+      type: [Boolean]
+    },
+    flat: {
+      default: false,
+      type: [Boolean]
     }
   },
   watch: {
@@ -102,6 +130,22 @@ export default {
   methods: {
     change (val) {
       this.$emit('update:value', val)
+    },
+    getValues () {
+      function getFlatInputs (inputs) {
+        let values = []
+        inputs.forEach( input => {
+          if (input.type !== 'formBuilder') {
+            values.push(input)
+          } else {
+            const formBuilderInputs = getFlatInputs(input.value)
+            values = values.concat(formBuilderInputs);
+          }
+        })
+        return values
+      }
+
+      return getFlatInputs(this.inputData)
     }
   }
 }
